@@ -242,7 +242,7 @@
       <div class="dor"><div class="dor-h"><span class="dor-icon">📊</span><div class="dor-name">Gastos Descontrolados</div></div><div class="dor-desc">Conecta seu banco via Open Banking e analisa automaticamente onde vai cada centavo.</div><div class="dor-tag">Economia: R$ 200–500/mês</div></div>
       <div class="dor"><div class="dor-h"><span class="dor-icon">📄</span><div class="dor-name">Boletos Esquecidos</div></div><div class="dor-desc">Detecta boletos no email, calcula multa e juros, e gera PIX automaticamente.</div><div class="dor-tag">Evita: multas e juros</div></div>
       <div class="dor"><div class="dor-h"><span class="dor-icon">📱</span><div class="dor-name">Planos Caros</div></div><div class="dor-desc">Compara em tempo real planos de celular, internet e saúde com dados reais das operadoras.</div><div class="dor-tag">Economia: R$ 600–4.8k/ano</div></div>
-      <div class="dor"><div class="dor-h"><span class="dor-icon">🛍️</span><div class="dor-name">Compras Caras</div></div><div class="dor-desc">Busca preços em Amazon, MagaLu e Shopee e alerta no menor preço histórico.</div><div class="dor-tag">Economia: R$ 50–200/compra</div></div>
+      <div class="dor"><div class="dor-h"><span class="dor-icon">🛍️</span><div class="dor-name">Compras Caras</div></div><div class="dor-desc">Busca preços em Amazon e Mercado Livre e alerta no menor preço histórico.</div><div class="dor-tag">Economia: R$ 50–200/compra</div></div>
       <div class="dor"><div class="dor-h"><span class="dor-icon">🔄</span><div class="dor-name">Assinaturas Esquecidas</div></div><div class="dor-desc">Detecta cobranças recorrentes esquecidas, mostra o custo anual e ajuda a cancelar.</div><div class="dor-tag">Economia: R$ 100–500/mês</div></div>
       <div class="dor"><div class="dor-h"><span class="dor-icon">⚠️</span><div class="dor-name">Cobranças Indevidas</div></div><div class="dor-desc">Analisa faturas e contratos, detecta abusos e gera reclamações formais para Procon e Consumidor.gov.</div><div class="dor-tag">Recupera: valores pagos a mais</div></div>
     </div>
@@ -303,7 +303,7 @@
           <div class="feat"><span class="feat-ico">✦</span>Análise de contratos e faturas em PDF</div>
           <div class="feat"><span class="feat-ico">✦</span>Gerar reclamação formal (Procon, Consumidor.gov, ANATEL)</div>
           <div class="feat"><span class="feat-ico">✦</span>Gerar texto para ReclameAqui</div>
-          <div class="feat"><span class="feat-ico">✦</span>Busca de preços Amazon + MagaLu + Shopee</div>
+          <div class="feat"><span class="feat-ico">✦</span>Busca de preços Amazon + Mercado Livre</div>
           <div class="feat"><span class="feat-ico">✦</span>Histórico de preços e alertas de queda</div>
           <div class="feat"><span class="feat-ico">✦</span>Monitorar preço de produto específico</div>
           <div class="feat"><span class="feat-ico">✦</span>Cancelar assinatura automaticamente</div>
@@ -337,6 +337,10 @@
     <div class="a-field" id="name-field">
       <label class="a-label">Nome</label>
       <input class="a-input" type="text" placeholder="Seu nome" id="auth-name"/>
+    </div>
+    <div class="a-field" id="phone-field">
+      <label class="a-label">WhatsApp</label>
+      <input class="a-input" type="tel" placeholder="(11) 99999-9999" id="auth-phone"/>
     </div>
     <div class="a-field">
       <label class="a-label">Email</label>
@@ -384,7 +388,7 @@
   </div>
   <div class="c-input">
     <div class="chips">
-      <div class="chip" onclick="sendQ('Busque o melhor preço do iPhone 15')">🛍️ Buscar preço</div>
+      <div class="chip" onclick="sendQ('Quero buscar o melhor preço de um produto')">🛍️ Buscar preço</div>
       <div class="chip" onclick="sendQ('Rastrear minha encomenda')">📦 Rastrear pedido</div>
       <div class="chip" onclick="sendQ('Consultar cotação do dólar')">💵 Cotação</div>
       <div class="chip" onclick="sendQ('Quais são meus direitos como consumidor?')">⚖️ Meus direitos</div>
@@ -419,24 +423,29 @@
         <div class="m-feat"><span class="m-feat-ico">✦</span>Detectar assinaturas e cobranças indevidas</div>
         <div class="m-feat"><span class="m-feat-ico">✦</span>Análise de contratos e faturas PDF</div>
         <div class="m-feat"><span class="m-feat-ico">✦</span>Reclamações formais (Procon, Consumidor.gov, ANATEL)</div>
-        <div class="m-feat"><span class="m-feat-ico">✦</span>Amazon + MagaLu + Shopee + histórico de preços</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Amazon + Mercado Livre + histórico de preços</div>
         <div class="m-feat"><span class="m-feat-ico">✦</span>Cancelar assinaturas automaticamente</div>
         <div class="m-feat"><span class="m-feat-ico">✦</span>Chat ilimitado com IA</div>
         <div class="m-price">
           <div class="m-price-n">R$ 29,90</div>
           <div class="m-price-p">por mês · cancele quando quiser</div>
         </div>
-        <button class="m-cta" onclick="hideUpgrade()">Assinar Premium</button>
+        <button class="m-cta" id="btn-assinar" onclick="assinarPremium()">Assinar Premium</button>
         <div class="m-close" onclick="hideUpgrade()">Continuar no gratuito</div>
       </div>
     </div>
   </div>
 </div>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
 const WEBHOOK='https://veltrilife.app.n8n.cloud/webhook/veltrilife-main';
 const WEBHOOK_CHAT='https://veltrilife.app.n8n.cloud/webhook/veltrilife-chat';
 const CADASTRO='https://veltrilife.app.n8n.cloud/webhook/veltrilife-cadastro';
+const SUPABASE_URL='https://tphdqfhciynnmfpxdkrf.supabase.co';
+const STRIPE_KEY='pk_test_51T7oRRB823Uv7zIKKz0LlJhywdaDLoEo5WDJWeUZdFzYJZlRRjUjLEsprjbJIfgW8KzVaA4OTREoF7P5Y4A5bBCR00DdnIexIf';
+const STRIPE_PRICE='price_1T7oV1B823Uv7zIKGvbyq628';
+const SUPABASE_KEY='sb_publishable_M8i-BXVkIvPwFdA-SSuR6Q_zmdw1S5L';
 let isPremium=false, userName='', currentTab='signup';
 let historico=[];
 
@@ -444,11 +453,11 @@ let historico=[];
 const PREMIUM=[
   'negociar_divida','comparar_plano','analise_gastos','alertas',
   'processar_boleto','ler_emails','agendar_calendario','analise_contrato',
-  'analise_fatura','reclamacao_formal','buscar_preco_magalu','buscar_preco_shopee',
+  'analise_fatura','reclamacao_formal',
   'monitorar_preco','historico_precos','cancelar_assinatura_auto','texto_reclameaqui_premium'
 ];
 
-window.addEventListener('load',()=>setTimeout(()=>show('landing','splash'),2000));
+window.addEventListener('load',()=>{setTimeout(()=>{const params=new URLSearchParams(window.location.search);if(params.get('premium')==='true'){isPremium=true;show('chat-screen','splash');document.getElementById('plan-bar').innerHTML='<span class="plan-bar-t">2726 Plano Premium</span><span style="font-size:12px;color:var(--gold)">2713 Ativo</span>';history.replaceState({},'',window.location.pathname);}else{show('landing','splash');}},2000);});
 
 function show(to,from){if(from)document.getElementById(from).classList.add('hidden');document.getElementById(to).classList.remove('hidden')}
 function goToLanding(){['auth','chat-screen'].forEach(id=>document.getElementById(id).classList.add('hidden'));show('landing')}
@@ -468,6 +477,7 @@ function switchTab(t){
   document.getElementById('tab-signup').classList.toggle('active',t==='signup');
   document.getElementById('tab-login').classList.toggle('active',t==='login');
   document.getElementById('name-field').style.display=t==='signup'?'block':'none';
+  document.getElementById('phone-field').style.display=t==='signup'?'block':'none';
   document.getElementById('auth-btn').textContent=t==='signup'?'Criar conta grátis':'Entrar';
   document.getElementById('auth-error').style.display='none';
   document.getElementById('auth-success').style.display='none';
@@ -475,13 +485,19 @@ function switchTab(t){
 
 async function handleAuth(){
   const nome=document.getElementById('auth-name').value.trim();
+  const telefone=document.getElementById('auth-phone').value.trim().replace(/\D/g,'');
   const email=document.getElementById('auth-email').value.trim();
+  const senha=document.getElementById('auth-pass').value;
   const btn=document.getElementById('auth-btn');
   const errEl=document.getElementById('auth-error');
   const okEl=document.getElementById('auth-success');
 
   if(!email){errEl.textContent='Digite seu email.';errEl.style.display='block';return}
+  if(!senha){errEl.textContent='Digite sua senha.';errEl.style.display='block';return}
   if(currentTab==='signup'&&!nome){errEl.textContent='Digite seu nome.';errEl.style.display='block';return}
+  if(currentTab==='signup'&&!telefone){errEl.textContent='Digite seu WhatsApp.';errEl.style.display='block';return}
+  if(currentTab==='signup'&&telefone.length<10){errEl.textContent='WhatsApp inválido.';errEl.style.display='block';return}
+  if(currentTab==='signup'&&senha.length<6){errEl.textContent='Senha deve ter ao menos 6 caracteres.';errEl.style.display='block';return}
 
   btn.disabled=true;
   btn.textContent=currentTab==='signup'?'Criando conta...':'Entrando...';
@@ -489,14 +505,30 @@ async function handleAuth(){
 
   try{
     if(currentTab==='signup'){
-      const res=await fetch(CADASTRO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,email})});
-      const data=await res.json();
-      if(data.erro){errEl.textContent=data.mensagem||'Erro ao criar conta.';errEl.style.display='block';btn.disabled=false;btn.textContent='Criar conta grátis';return}
+      // 1. Criar usuário no Supabase Auth
+      const authRes=await fetch(`${SUPABASE_URL}/auth/v1/signup`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+        body:JSON.stringify({email,password:senha})
+      });
+      const authData=await authRes.json();
+      if(authData.error){errEl.textContent=authData.error.message||'Erro ao criar conta.';errEl.style.display='block';btn.disabled=false;btn.textContent='Criar conta grátis';return}
+      // 2. Salvar no banco e enviar email via n8n
+      await fetch(CADASTRO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,email,telefone})});
       okEl.textContent='✓ Conta criada! Verifique seu email.';okEl.style.display='block';
       setTimeout(()=>goToChat(nome),1200);
     } else {
-      // Login simples — verificar se email existe no Supabase (implementar depois)
-      setTimeout(()=>goToChat(email.split('@')[0]),500);
+      // Login real com Supabase Auth
+      const authRes=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+        body:JSON.stringify({email,password:senha})
+      });
+      const authData=await authRes.json();
+      if(authData.error){errEl.textContent='Email ou senha incorretos.';errEl.style.display='block';btn.disabled=false;btn.textContent='Entrar';return}
+      // Buscar nome do usuário
+      const nomeUsuario=authData.user?.user_metadata?.nome||email.split('@')[0];
+      goToChat(nomeUsuario);
     }
   }catch{
     errEl.textContent='Erro de conexão. Tente novamente.';errEl.style.display='block';
@@ -504,8 +536,24 @@ async function handleAuth(){
   }
 }
 
-function showUpgrade(){document.getElementById('upgrade-modal').style.display='block'}
-function hideUpgrade(){document.getElementById('upgrade-modal').style.display='none'}
+function showUpgrade(){document.getElementById("upgrade-modal").style.display="block"}
+function hideUpgrade(){document.getElementById("upgrade-modal").style.display="none"}
+async function assinarPremium(){
+  const btn=document.getElementById("btn-assinar");
+  btn.textContent="Aguarde...";btn.disabled=true;
+  try{
+    const stripe=Stripe(STRIPE_KEY);
+    await stripe.redirectToCheckout({
+      lineItems:[{price:STRIPE_PRICE,quantity:1}],
+      mode:"subscription",
+      successUrl:window.location.origin+"?premium=true",
+      cancelUrl:window.location.href
+    });
+  }catch(e){
+    btn.textContent="Assinar Premium";btn.disabled=false;
+    alert("Erro ao abrir pagamento. Tente novamente.");
+  }
+}
 function sendQ(t){document.getElementById('msg-input').value=t;sendMsg()}
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,96)+'px'}
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}}
@@ -579,8 +627,7 @@ function detectIntent(t){
   if(t.match(/dívida|divida|serasa|negoci|débito|debito/))return'negociar_divida';
   if(t.match(/plano|operadora|celular.*car|car.*celular|internet.*car|claro|vivo|tim\b|oi\b/))return'comparar_plano';
   if(t.match(/boleto|código de barras/))return'processar_boleto';
-  if(t.match(/magalu|magazine/))return'buscar_preco_magalu';
-  if(t.match(/shopee/))return'buscar_preco_shopee';
+  if(t.match(/amazon/))return'buscar_preco_amazon';
   if(t.match(/preço|preco|comprar|produto|busq|amazon/))return'buscar_preco_amazon';
   if(t.match(/gast|despesa|gastei|extrato/))return'analise_gastos';
   if(t.match(/alerta|notificaç/))return'alertas';
@@ -607,7 +654,7 @@ function buildPayload(intent,text){
     return{...b,credor:c,valor_original:parseFloat(v),tempo_atraso_meses:12};
   }
   if(intent==='comparar_plano'){const tipo=text.match(/internet|banda/i)?'internet':text.match(/saúde|saude/i)?'saude':'celular';return{...b,tipo,operadora_atual:'',valor_atual:0,franquia_atual:''}}
-  if(intent.includes('buscar_preco')){const p=text.replace(/busque|busca|preço|preco|comprar|quero|encontre|melhor|de|do|da|o|a|na|amazon|magalu|shopee/gi,'').trim();return{...b,produto:p||text}}
+  if(intent.includes('buscar_preco')){const p=text.replace(/busque|busca|preço|preco|comprar|quero|encontre|melhor|de|do|da|o|a|na|amazon|mercado livre|ml/gi,'').trim();return{...b,produto:p||text}}
   if(intent==='rastrear_correios')return{...b,codigo_rastreio:text.match(/[A-Z]{2}\d{9}[A-Z]{2}/)?.[0]||''};
   if(intent==='consultar_cnpj')return{...b,cnpj:text.match(/\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}/)?.[0]||''};
   if(intent==='consultar_cep')return{...b,cep:text.match(/\d{5}-?\d{3}/)?.[0]||''};
@@ -627,7 +674,8 @@ function handleResponse(data,intent){
   if(r.consulta_cnpj){const c=r.consulta_cnpj;addCard('CNPJ',[{l:'Razão Social',v:c.razao_social},{l:'Situação',v:c.situacao,c:'gold'},{l:'Município',v:c.municipio}])}
 }
 
-function addMsg(role,text){const msgs=document.getElementById('c-msgs');const d=document.createElement('div');d.className=`msg ${role}`;d.innerHTML=`<div class="bubble">${text}</div>`;msgs.appendChild(d);scrollBot()}
+function renderMd(t){t=t.replace(/\[ACAO:\{.*?\}\]/gs,'').trim();t=t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');t=t.replace(/\*(.*?)\*/g,'<em>$1</em>');t=t.replace(/\n/g,'<br>');return t}
+function addMsg(role,text){const msgs=document.getElementById('c-msgs');const d=document.createElement('div');d.className=`msg ${role}`;const display=role==='bot'?renderMd(text):text;d.innerHTML=`<div class="bubble">${display}</div>`;msgs.appendChild(d);scrollBot()}
 function addCard(title,rows){const msgs=document.getElementById('c-msgs');const w=document.createElement('div');w.className='msg bot';w.innerHTML=`<div class="r-card"><div class="r-title">${title}</div>${rows.map(r=>`<div class="r-row"><span class="r-l">${r.l}</span><span class="r-v ${r.c||''}">${r.v||'—'}</span></div>`).join('')}</div>`;msgs.appendChild(w);scrollBot()}
 function addLocked(){const msgs=document.getElementById('c-msgs');const w=document.createElement('div');w.className='msg bot';w.innerHTML=`<div class="locked"><div class="locked-ico">🔒</div><div><div class="locked-t">Funcionalidade Premium</div><div class="locked-d">Desbloqueie por R$ 29,90/mês.</div></div><button class="locked-btn" onclick="showUpgrade()">Ver planos</button></div>`;msgs.appendChild(w);scrollBot()}
 function addTyping(){const msgs=document.getElementById('c-msgs');const d=document.createElement('div');d.className='msg bot';d.innerHTML=`<div class="typing"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>`;msgs.appendChild(d);scrollBot();return d}
