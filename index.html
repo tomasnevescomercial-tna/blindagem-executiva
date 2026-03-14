@@ -11,7 +11,790 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, vi<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#080808"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Veltrilife"/>
+  <title>Veltrilife — Seu Guardião Financeiro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black:#080808; --black-2:#101010; --black-3:#181818; --black-4:#202020;
+      --gold:#c9a84c; --gold-lt:#e8c97a; --gold-dk:#9a7230;
+      --gold-dim:rgba(201,168,76,.14); --gold-glow:rgba(201,168,76,.06);
+      --white:#f4efe6; --w60:rgba(244,239,230,.6); --w30:rgba(244,239,230,.3);
+      --w10:rgba(244,239,230,.10); --w05:rgba(244,239,230,.05);
+      --green:#4cac7a; --red:#c94c4c;
+      --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;overflow:hidden;background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
+    .screen{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--black);transition:opacity .4s ease,transform .4s ease;z-index:1}
+    .screen.hidden{opacity:0;pointer-events:none;transform:translateY(16px)}
+
+    /* SPLASH */
+    #splash{align-items:center;justify-content:center;gap:12px;z-index:99}
+    .s-logo{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;letter-spacing:.1em;background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--gold-dk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fu .9s ease both}
+    .s-line{width:48px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:fu .9s .2s ease both}
+    .s-tag{font-size:12px;color:var(--w30);letter-spacing:.22em;text-transform:uppercase;font-weight:300;animation:fu .9s .35s ease both}
+
+    /* LANDING */
+    #landing{overflow-y:auto;-webkit-overflow-scrolling:touch}
+    #landing::-webkit-scrollbar{display:none}
+    .hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--st)+60px) 28px 48px;text-align:center;position:relative}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 40%,rgba(201,168,76,.07) 0%,transparent 70%);pointer-events:none}
+    .hero-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:20px;border:1px solid rgba(201,168,76,.25);background:var(--gold-dim);font-size:11px;color:var(--gold-lt);letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px;animation:fu .7s ease both}
+    .hero-badge b{width:6px;height:6px;border-radius:50%;background:var(--gold);display:block;animation:pulse 2s infinite}
+    .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,11vw,60px);font-weight:300;line-height:1.1;margin-bottom:8px;animation:fu .7s .1s ease both}
+    .hero-title em{font-style:italic;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-sub{font-size:15px;color:var(--w60);line-height:1.65;font-weight:300;max-width:320px;margin:16px auto 36px;animation:fu .7s .2s ease both}
+    .btn-gold{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;border-radius:40px;background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--gold-dk));color:var(--black);font-size:15px;font-weight:500;cursor:pointer;border:none;box-shadow:0 8px 32px rgba(201,168,76,.22);transition:all .2s}
+    .btn-gold:active{transform:scale(.97)}
+    .hero-cta{animation:fu .7s .3s ease both}
+    .hero-sec{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--w30);cursor:pointer;animation:fu .7s .4s ease both}
+    .hero-sec:active{color:var(--gold)}
+    .scroll-hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);animation:bounce 2.2s infinite;opacity:.35}
+    .scroll-hint svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.5}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.18),transparent);margin:0 24px}
+    .section{padding:64px 24px;max-width:480px;margin:0 auto}
+    .s-label{font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;font-weight:400;margin-bottom:12px}
+    .s-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-height:1.2;margin-bottom:14px}
+    .s-title em{font-style:italic;color:var(--gold)}
+    .s-sub{font-size:14px;color:var(--w60);line-height:1.65;font-weight:300}
+    .impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:26px}
+    .impact-card{background:var(--black-3);border:1px solid var(--w05);border-radius:14px;padding:18px;text-align:center}
+    .impact-num{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .impact-lbl{font-size:12px;color:var(--w60);font-weight:300;margin-top:4px;line-height:1.4}
+    .dores{display:flex;flex-direction:column;gap:13px;margin-top:26px}
+    .dor{background:var(--black-3);border:1px solid var(--w05);border-radius:16px;padding:18px;position:relative;overflow:hidden}
+    .dor::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent)}
+    .dor-h{display:flex;align-items:center;gap:11px;margin-bottom:7px}
+    .dor-icon{font-size:22px}
+    .dor-name{font-size:15px;font-weight:500}
+    .dor-desc{font-size:13px;color:var(--w60);line-height:1.55;font-weight:300}
+    .dor-tag{display:inline-block;margin-top:9px;padding:3px 10px;border-radius:10px;font-size:11px;background:var(--gold-dim);color:var(--gold-lt)}
+    .steps{display:flex;flex-direction:column;margin-top:26px;position:relative}
+    .steps::before{content:'';position:absolute;left:20px;top:22px;bottom:22px;width:1px;background:linear-gradient(180deg,var(--gold-dim),transparent)}
+    .step{display:flex;gap:20px;padding:17px 0}
+    .step-n{width:40px;height:40px;min-width:40px;border-radius:50%;background:var(--black-3);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);position:relative;z-index:1}
+    .step-t{font-size:15px;font-weight:500;margin-bottom:3px;padding-top:8px}
+    .step-d{font-size:13px;color:var(--w60);font-weight:300;line-height:1.55}
+    .plans{display:flex;flex-direction:column;gap:15px;margin-top:26px}
+    .plan{background:var(--black-3);border:1px solid var(--w05);border-radius:20px;padding:24px;position:relative;overflow:hidden}
+    .plan.featured{border-color:rgba(201,168,76,.32);background:linear-gradient(155deg,rgba(201,168,76,.06) 0%,var(--black-3) 55%)}
+    .plan.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+    .plan-badge{position:absolute;top:16px;right:16px;padding:4px 12px;border-radius:12px;font-size:11px;background:linear-gradient(135deg,var(--gold-lt),var(--gold));color:var(--black);font-weight:500}
+    .plan-name{font-size:12px;color:var(--w60);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+    .plan-price{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;line-height:1}
+    .plan-price small{font-size:15px;color:var(--w30);font-family:'DM Sans',sans-serif;font-weight:300}
+    .plan-price-free{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-height:1}
+    .plan-desc{font-size:13px;color:var(--w60);margin:9px 0 18px;line-height:1.5;font-weight:300}
+    .plan-feats{display:flex;flex-direction:column;gap:8px}
+    .feat{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--w60);font-weight:300}
+    .feat-ico{color:var(--gold);font-size:13px;margin-top:1px;min-width:14px}
+    .plan-btn{display:flex;align-items:center;justify-content:center;width:100%;padding:14px;border-radius:13px;margin-top:18px;background:linear-gradient(135deg,var(--gold-lt),var(--gold));color:var(--black);font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .2s}
+    .plan-btn:active{transform:scale(.97)}
+    .plan-btn.outline{background:transparent;border:1px solid rgba(201,168,76,.28);color:var(--gold)}
+    .l-footer{padding:40px 24px calc(var(--sb)+32px);text-align:center;border-top:1px solid var(--w05)}
+    .l-footer-logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:5px}
+    .l-footer-tag{font-size:12px;color:var(--w30);letter-spacing:.12em;text-transform:uppercase;font-weight:300;margin-bottom:22px}
+
+    /* AUTH */
+    #auth{justify-content:flex-end}
+    .auth-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(201,168,76,.07),transparent 60%)}
+    .auth-sheet{background:var(--black-2);border-radius:28px 28px 0 0;border-top:1px solid rgba(201,168,76,.15);padding:8px 24px calc(var(--sb)+28px);position:relative;z-index:1}
+    .auth-handle{width:36px;height:4px;border-radius:2px;background:var(--w10);margin:10px auto 22px}
+    .auth-logo{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:4px}
+    .auth-sub{text-align:center;font-size:13px;color:var(--w30);font-weight:300;margin-bottom:26px}
+    .auth-tabs{display:flex;background:var(--black-3);border-radius:12px;padding:4px;margin-bottom:22px}
+    .auth-tab{flex:1;padding:10px;text-align:center;font-size:14px;color:var(--w30);cursor:pointer;border-radius:9px;transition:all .2s}
+    .auth-tab.active{background:var(--black-4);color:var(--white)}
+    .a-field{margin-bottom:13px}
+    .a-label{font-size:11px;color:var(--w30);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;display:block}
+    .a-input{width:100%;padding:13px 15px;border-radius:12px;background:var(--black-3);border:1px solid var(--w05);color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;outline:none;transition:border-color .2s}
+    .a-input:focus{border-color:rgba(201,168,76,.35)}
+    .a-input::placeholder{color:var(--w30)}
+    .a-btn{width:100%;padding:15px;border-radius:13px;background:linear-gradient(135deg,var(--gold-lt),var(--gold));color:var(--black);font-size:15px;font-weight:500;cursor:pointer;border:none;box-shadow:0 6px 24px rgba(201,168,76,.18);margin-top:8px;transition:all .2s}
+    .a-btn:active{transform:scale(.98)}
+    .a-btn:disabled{opacity:.5}
+    .a-div{display:flex;align-items:center;gap:12px;color:var(--w30);font-size:12px;margin:15px 0}
+    .a-div::before,.a-div::after{content:'';flex:1;height:1px;background:var(--w05)}
+    .a-back{display:flex;align-items:center;gap:6px;color:var(--w30);font-size:13px;cursor:pointer;justify-content:center}
+    .a-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+    .a-back:active{color:var(--gold)}
+    .a-error{font-size:13px;color:var(--red);text-align:center;margin-top:8px;display:none}
+    .a-success{font-size:13px;color:var(--green);text-align:center;margin-top:8px;display:none}
+
+    /* CHAT */
+    #chat-screen{display:flex;flex-direction:column}
+    .c-header{padding:calc(var(--st)+13px) 20px 13px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,var(--black) 45%,transparent);position:relative;z-index:5;flex-shrink:0}
+    .c-logo{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:400;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .c-hbtns{display:flex;gap:8px}
+    .c-hbtn{width:36px;height:36px;border-radius:50%;border:1px solid var(--w10);background:var(--black-3);display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .c-hbtn:active{background:var(--black-4)}
+    .c-hbtn svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.5}
+    .plan-bar{margin:0 20px 10px;padding:8px 14px;border-radius:10px;background:var(--gold-dim);border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .plan-bar-t{font-size:12px;color:var(--gold-lt)}
+    .plan-bar-btn{font-size:12px;color:var(--gold);font-weight:500;cursor:pointer}
+    .c-msgs{flex:1;overflow-y:auto;padding:4px 16px 10px;display:flex;flex-direction:column;gap:13px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+    .c-msgs::-webkit-scrollbar{display:none}
+
+    /* Welcome simples - só texto, sem botões */
+    .c-welcome{padding:24px 4px 8px;display:flex;flex-direction:column;gap:20px}
+    .c-welcome-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;line-height:1.2}
+    .c-welcome-title span{background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .c-welcome-sub{font-size:14px;color:var(--w60);font-weight:300;line-height:1.6}
+    .c-welcome-hint{font-size:13px;color:var(--w30);font-weight:300;font-style:italic}
+
+    .msg{display:flex;flex-direction:column;gap:3px;animation:fu .35s ease both}
+    .msg.user{align-items:flex-end}
+    .msg.bot{align-items:flex-start}
+    .bubble{max-width:84%;padding:11px 14px;border-radius:18px;line-height:1.55;font-size:14px;font-weight:300;position:relative;white-space:pre-wrap}
+    .msg.user .bubble{background:linear-gradient(135deg,var(--gold-lt),var(--gold),var(--gold-dk));color:var(--black);font-weight:400;border-radius:18px 18px 4px 18px}
+    .msg.bot .bubble{background:var(--black-3);border:1px solid var(--w05);border-radius:18px 18px 18px 4px}
+    .msg.bot .bubble::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--gold-dim),transparent);border-radius:18px 18px 0 0}
+    .r-card{max-width:92%;background:var(--black-3);border:1px solid rgba(201,168,76,.2);border-radius:13px;padding:13px;margin-top:2px;animation:fu .35s ease both}
+    .r-title{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);font-weight:400;margin-bottom:9px}
+    .r-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--w05);font-size:13px}
+    .r-row:last-child{border:none}
+    .r-l{color:var(--w30);font-weight:300}
+    .r-v{color:var(--white);font-weight:400;text-align:right;max-width:60%}
+    .r-v.gold{color:var(--gold)} .r-v.green{color:var(--green)} .r-v.red{color:var(--red)}
+    .locked{max-width:92%;background:var(--black-3);border:1px solid var(--w05);border-radius:13px;padding:15px;margin-top:2px;display:flex;align-items:center;gap:11px}
+    .locked-ico{font-size:23px}
+    .locked-t{font-size:13px;font-weight:500;margin-bottom:3px}
+    .locked-d{font-size:12px;color:var(--w30);font-weight:300}
+    .locked-btn{padding:7px 13px;border-radius:10px;background:linear-gradient(135deg,var(--gold-lt),var(--gold));color:var(--black);font-size:12px;font-weight:500;cursor:pointer;border:none;white-space:nowrap}
+    .typing{display:flex;align-items:center;gap:5px;padding:12px 15px;background:var(--black-3);border:1px solid var(--w05);border-radius:18px 18px 18px 4px;width:fit-content}
+    .t-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:td 1.2s ease infinite}
+    .t-dot:nth-child(2){animation-delay:.2s} .t-dot:nth-child(3){animation-delay:.4s}
+    .day-sep{display:flex;align-items:center;gap:10px;color:var(--w30);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+    .day-sep::before,.day-sep::after{content:'';flex:1;height:1px;background:var(--w05)}
+    .c-input{padding:8px 16px calc(var(--sb)+10px);background:linear-gradient(0deg,var(--black) 45%,transparent);flex-shrink:0}
+    .chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+    .chips::-webkit-scrollbar{display:none}
+    .chip{flex-shrink:0;padding:6px 13px;border-radius:18px;font-size:12px;border:1px solid var(--w10);color:var(--w60);background:var(--black-3);cursor:pointer;white-space:nowrap}
+    .chip:active{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+    .i-row{display:flex;align-items:flex-end;gap:9px;background:var(--black-3);border:1px solid var(--w10);border-radius:26px;padding:9px 9px 9px 16px;transition:border-color .2s}
+    .i-row:focus-within{border-color:rgba(201,168,76,.38);box-shadow:0 0 0 3px var(--gold-glow)}
+    #msg-input{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;line-height:1.4;resize:none;max-height:96px;min-height:22px;overflow-y:auto}
+    #msg-input::placeholder{color:var(--w30)} #msg-input::-webkit-scrollbar{display:none}
+    #send-btn{width:38px;height:38px;min-width:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-lt),var(--gold));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    #send-btn:active{transform:scale(.92)} #send-btn:disabled{opacity:.35}
+    #send-btn svg{width:16px;height:16px;fill:var(--black)}
+
+    /* MODAL */
+    .m-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);z-index:80;display:flex;align-items:flex-end;animation:fi .2s ease}
+    .m-sheet{width:100%;max-width:480px;margin:0 auto;background:var(--black-2);border-radius:24px 24px 0 0;border-top:1px solid rgba(201,168,76,.2);padding:8px 0 calc(var(--sb)+26px);animation:su .35s cubic-bezier(.34,1.56,.64,1)}
+    .m-handle{width:36px;height:4px;border-radius:2px;background:var(--w10);margin:10px auto 18px}
+    .m-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:400;padding:0 24px 15px;border-bottom:1px solid var(--w05)}
+    .m-body{padding:18px 24px}
+    .m-feat{display:flex;gap:10px;margin-bottom:11px;font-size:13px;color:var(--w60);font-weight:300}
+    .m-feat-ico{color:var(--gold);font-size:14px;min-width:18px}
+    .m-price{text-align:center;padding:18px 0;border-top:1px solid var(--w05);border-bottom:1px solid var(--w05);margin:15px 0}
+    .m-price-n{font-family:'Cormorant Garamond',serif;font-size:50px;font-weight:300;background:linear-gradient(135deg,var(--gold-lt),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+    .m-price-p{font-size:13px;color:var(--w30);font-weight:300;margin-top:5px}
+    .m-cta{width:100%;padding:15px;border-radius:13px;background:linear-gradient(135deg,var(--gold-lt),var(--gold));color:var(--black);font-size:15px;font-weight:500;cursor:pointer;border:none}
+    .m-cta:active{transform:scale(.98)}
+    .m-close{display:block;text-align:center;margin-top:13px;font-size:13px;color:var(--w30);cursor:pointer}
+
+    @keyframes fu{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fi{from{opacity:0}to{opacity:1}}
+    @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    @keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.5}
+  </style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="screen" id="splash">
+  <div class="s-logo">Veltrilife</div>
+  <div class="s-line"></div>
+  <div class="s-tag">Seu guardião financeiro</div>
+</div>
+
+<!-- LANDING -->
+<div class="screen hidden" id="landing">
+  <div class="hero">
+    <div class="hero-badge"><b></b>Assistente Financeiro com IA</div>
+    <h1 class="hero-title">Cuide do seu<br>dinheiro com<br><em>inteligência</em></h1>
+    <p class="hero-sub">Negocie dívidas, compare planos, monitore gastos e economize milhares por ano — tudo em uma conversa.</p>
+    <button class="btn-gold hero-cta" onclick="goToAuth()">Começar gratuitamente</button>
+    <div class="hero-sec" onclick="goToAuth('login')">Já tenho conta →</div>
+    <div class="scroll-hint"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section">
+    <div class="s-label">Impacto real</div>
+    <h2 class="s-title">Números que<br><em>transformam vidas</em></h2>
+    <div class="impact-grid">
+      <div class="impact-card"><div class="impact-num">R$16k</div><div class="impact-lbl">economia média anual</div></div>
+      <div class="impact-card"><div class="impact-num">70%</div><div class="impact-lbl">desconto em dívidas</div></div>
+      <div class="impact-card"><div class="impact-num">30+</div><div class="impact-lbl">funcionalidades</div></div>
+      <div class="impact-card"><div class="impact-num">24/7</div><div class="impact-lbl">monitoramento automático</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section">
+    <div class="s-label">7 problemas resolvidos</div>
+    <h2 class="s-title">Tudo que te<br><em>custa dinheiro</em></h2>
+    <p class="s-sub">Identificamos as 7 maiores dores financeiras dos brasileiros. Resolvemos todas.</p>
+    <div class="dores">
+      <div class="dor"><div class="dor-h"><span class="dor-icon">💸</span><div class="dor-name">Dívidas no Serasa</div></div><div class="dor-desc">Script personalizado por IA, desconto de até 70% e negociação com o credor em minutos.</div><div class="dor-tag">Economia: R$ 2k–10k</div></div>
+      <div class="dor"><div class="dor-h"><span class="dor-icon">📊</span><div class="dor-name">Gastos Descontrolados <span style="font-size:10px;background:rgba(201,168,76,0.2);color:#c9a84c;padding:2px 8px;border-radius:20px;border:1px solid rgba(201,168,76,0.3);margin-left:4px">Em breve</span></div></div><div class="dor-desc">Conecta seu banco via Open Banking e analisa automaticamente onde vai cada centavo.</div><div class="dor-tag">Economia: R$ 200–500/mês</div></div>
+      <div class="dor"><div class="dor-h"><span class="dor-icon">📄</span><div class="dor-name">Boletos Esquecidos</div></div><div class="dor-desc">Detecta boletos no email, calcula multa e juros, e gera PIX automaticamente.</div><div class="dor-tag">Evita: multas e juros</div></div>
+      <div class="dor"><div class="dor-h"><span class="dor-icon">📱</span><div class="dor-name">Planos Caros</div></div><div class="dor-desc">Compara em tempo real planos de celular, internet e saúde com dados reais das operadoras.</div><div class="dor-tag">Economia: R$ 600–4.8k/ano</div></div>
+      <div class="dor"><div class="dor-h"><span class="dor-icon">🛍️</span><div class="dor-name">Compras Caras</div></div><div class="dor-desc">Busca preços em Amazon e Mercado Livre e alerta no menor preço histórico.</div><div class="dor-tag">Economia: R$ 50–200/compra</div></div>
+      <div class="dor"><div class="dor-h"><span class="dor-icon">🔄</span><div class="dor-name">Assinaturas Esquecidas</div></div><div class="dor-desc">Detecta cobranças recorrentes esquecidas, mostra o custo anual e ajuda a cancelar.</div><div class="dor-tag">Economia: R$ 100–500/mês</div></div>
+      <div class="dor"><div class="dor-h"><span class="dor-icon">⚠️</span><div class="dor-name">Cobranças Indevidas</div></div><div class="dor-desc">Analisa faturas e contratos, detecta abusos e gera reclamações formais para Procon e Consumidor.gov.</div><div class="dor-tag">Recupera: valores pagos a mais</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section">
+    <div class="s-label">Como funciona</div>
+    <h2 class="s-title">Simples como<br><em>uma conversa</em></h2>
+    <p class="s-sub">Sem menus. Só fale o que precisa em português natural.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div><div class="step-t">Crie sua conta grátis</div><div class="step-d">Em 30 segundos. Você recebe um email de boas-vindas automaticamente.</div></div></div>
+      <div class="step"><div class="step-n">2</div><div><div class="step-t">Fale o que precisa</div><div class="step-d">"Quero negociar minha dívida no Bradesco" ou "Meu plano de celular está caro".</div></div></div>
+      <div class="step"><div class="step-n">3</div><div><div class="step-t">A IA age por você</div><div class="step-d">Busca, analisa, negocia e entrega o resultado em segundos.</div></div></div>
+      <div class="step"><div class="step-n">4</div><div><div class="step-t">Economize de verdade</div><div class="step-d">Resultados reais, economia real, vida financeira sob controle.</div></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section">
+    <div class="s-label">Planos</div>
+    <h2 class="s-title">Escolha seu<br><em>nível de controle</em></h2>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-name">Gratuito</div>
+        <div class="plan-price-free">R$ 0</div>
+        <div class="plan-desc">Para começar a economizar hoje, sem compromisso.</div>
+        <div class="plan-feats">
+          <div class="feat"><span class="feat-ico">✦</span>Busca de preços na Amazon</div>
+          <div class="feat"><span class="feat-ico">✦</span>Rastrear encomendas (Correios)</div>
+          <div class="feat"><span class="feat-ico">✦</span>Calcular juros e multa de boleto</div>
+          <div class="feat"><span class="feat-ico">✦</span>Scripts prontos: cancelamento, reembolso, produto defeituoso, contestar multa</div>
+          <div class="feat"><span class="feat-ico">✦</span>Orientação de direitos do consumidor</div>
+          <div class="feat"><span class="feat-ico">✦</span>Prazos legais e roteiro de portabilidade</div>
+          <div class="feat"><span class="feat-ico">✦</span>Buscar no ReclameAqui</div>
+          <div class="feat"><span class="feat-ico">✦</span>Buscar canais oficiais de atendimento</div>
+          <div class="feat"><span class="feat-ico">✦</span>Consulta CNPJ, CEP, cotação de moeda e feriados</div>
+          <div class="feat"><span class="feat-ico">✦</span>Resumo de situação com empresa</div>
+        </div>
+        <button class="plan-btn outline" onclick="goToAuth()">Começar grátis</button>
+      </div>
+      <div class="plan featured">
+        <div class="plan-badge">Mais popular</div>
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">R$ 29<small>,90/mês</small></div>
+        <div class="plan-desc">O guardião completo. Paga-se sozinho no primeiro mês.</div>
+        <div class="plan-feats">
+          <div class="feat"><span class="feat-ico">✦</span>Tudo do plano gratuito</div>
+          <div class="feat"><span class="feat-ico">✦</span>Análise de gastos via Open Banking <span style="font-size:10px;opacity:0.5">(em breve)</span></div>
+          <div class="feat"><span class="feat-ico">✦</span>Negociação de dívidas com script personalizado por IA</div>
+          <div class="feat"><span class="feat-ico">✦</span>Comparação de planos de celular, internet e saúde</div>
+          <div class="feat"><span class="feat-ico">✦</span>Alertas proativos diários às 7h</div>
+          <div class="feat"><span class="feat-ico">✦</span>Detectar assinaturas esquecidas automaticamente</div>
+          <div class="feat"><span class="feat-ico">✦</span>Processar boletos + gerar PIX automaticamente</div>
+          <div class="feat"><span class="feat-ico">✦</span>Ler e responder emails (Gmail + Microsoft Outlook)</div>
+          <div class="feat"><span class="feat-ico">✦</span>Agendar reuniões (Google Calendar + Microsoft Calendar)</div>
+          <div class="feat"><span class="feat-ico">✦</span>Detectar cobranças indevidas em faturas</div>
+          <div class="feat"><span class="feat-ico">✦</span>Análise de contratos e faturas em PDF</div>
+          <div class="feat"><span class="feat-ico">✦</span>Gerar reclamação formal (Procon, Consumidor.gov, ANATEL)</div>
+          <div class="feat"><span class="feat-ico">✦</span>Gerar texto para ReclameAqui</div>
+          <div class="feat"><span class="feat-ico">✦</span>Busca de preços Amazon + Mercado Livre</div>
+          <div class="feat"><span class="feat-ico">✦</span>Histórico de preços e alertas de queda</div>
+          <div class="feat"><span class="feat-ico">✦</span>Monitorar preço de produto específico</div>
+          <div class="feat"><span class="feat-ico">✦</span>Cancelar assinatura automaticamente</div>
+          <div class="feat"><span class="feat-ico">✦</span>Preparar reunião de negociação</div>
+          <div class="feat"><span class="feat-ico">✦</span>Chat ilimitado com IA</div>
+        </div>
+        <button class="plan-btn" onclick="goToAuth()">Assinar Premium</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="l-footer">
+    <div class="l-footer-logo">Veltrilife</div>
+    <div class="l-footer-tag">Seu guardião financeiro</div>
+    <button class="btn-gold" onclick="goToAuth()">Começar agora — é grátis</button>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div class="screen hidden" id="auth">
+  <div class="auth-bg"></div>
+  <div style="flex:1;cursor:pointer" onclick="goToLanding()"></div>
+  <div class="auth-sheet">
+    <div class="auth-handle"></div>
+    <div class="auth-logo">Veltrilife</div>
+    <div class="auth-sub">Seu guardião financeiro pessoal</div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-signup" onclick="switchTab('signup')">Criar conta</div>
+      <div class="auth-tab" id="tab-login" onclick="switchTab('login')">Entrar</div>
+    </div>
+    <div class="a-field" id="name-field">
+      <label class="a-label">Nome</label>
+      <input class="a-input" type="text" placeholder="Seu nome" id="auth-name"/>
+    </div>
+    <div class="a-field" id="phone-field">
+      <label class="a-label">WhatsApp</label>
+      <input class="a-input" type="tel" placeholder="(11) 99999-9999" id="auth-phone"/>
+    </div>
+    <div class="a-field">
+      <label class="a-label">Email</label>
+      <input class="a-input" type="email" placeholder="seu@email.com" id="auth-email"/>
+    </div>
+    <div class="a-field">
+      <label class="a-label">Senha</label>
+      <input class="a-input" type="password" placeholder="••••••••" id="auth-pass"/>
+    </div>
+    <div class="a-field" id="terms-field" style="display:none">
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:rgba(244,239,230,0.6);line-height:1.5">
+        <input type="checkbox" id="terms-check" style="margin-top:2px;accent-color:#c9a84c;min-width:16px;height:16px"/>
+        <span>Li e concordo com os <span onclick="showTerms()" style="color:#c9a84c;text-decoration:underline;cursor:pointer">Termos de Uso e Política de Privacidade</span></span>
+      </label>
+    </div>
+    <button class="a-btn" id="auth-btn" onclick="handleAuth()">Criar conta grátis</button>
+    <div class="a-error" id="auth-error"></div>
+    <div class="a-success" id="auth-success"></div>
+    <div class="a-div">ou</div>
+    <div class="a-back" onclick="goToLanding()">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Voltar para o início
+    </div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div class="screen hidden" id="chat-screen">
+  <div class="c-header">
+    <div class="c-logo">Veltrilife</div>
+    <div class="c-hbtns">
+      <div class="c-hbtn" onclick="showUpgrade()">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div class="c-hbtn" onclick="goToLanding()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="plan-bar" id="plan-bar">
+    <span class="plan-bar-t">✦ Plano Gratuito</span>
+    <span class="plan-bar-btn" onclick="showUpgrade()">Fazer upgrade →</span>
+  </div>
+  <div class="c-msgs" id="c-msgs">
+    <div class="c-welcome">
+      <div class="c-welcome-title">Olá, <span id="user-name">como posso ajudar?</span></div>
+      <div class="c-welcome-sub">Sou seu guardião financeiro pessoal. Fale comigo em linguagem natural — resolvo qualquer problema financeiro.</div>
+      <div class="c-welcome-hint">Experimente: "Quero negociar minha dívida no Serasa" ou "Meu plano de celular está caro, encontre algo melhor"</div>
+    </div>
+    <div class="day-sep">hoje</div>
+  </div>
+  <div class="c-input">
+    <div class="chips">
+      <div class="chip" onclick="sendQ('Quero buscar o melhor preço de um produto')">🛍️ Buscar preço</div>
+      <div class="chip" onclick="sendQ('Rastrear minha encomenda')">📦 Rastrear pedido</div>
+      <div class="chip" onclick="sendQ('Consultar cotação do dólar')">💵 Cotação</div>
+      <div class="chip" onclick="sendQ('Quais são meus direitos como consumidor?')">⚖️ Meus direitos</div>
+      <div class="chip" onclick="sendQ('Buscar no ReclameAqui Claro')">⭐ ReclameAqui</div>
+      <div class="chip" onclick="sendQ('Consultar CNPJ')">🏢 CNPJ</div>
+      <div class="chip" onclick="sendQ('Quero negociar minha dívida')">🤝 Negociar dívida</div>
+      <div class="chip" onclick="sendQ('Analise meus gastos')">📊 Gastos</div>
+    </div>
+    <div class="i-row">
+      <textarea id="msg-input" placeholder="Fale comigo em linguagem natural..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="send-btn" onclick="sendMsg()">
+        <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- UPGRADE MODAL -->
+<div id="terms-modal" style="display:none;position:fixed;inset:0;z-index:90;background:rgba(0,0,0,0.85);overflow-y:auto">
+  <div style="max-width:600px;margin:20px auto;background:#111;border-radius:16px;padding:32px;color:rgba(244,239,230,0.85);font-size:13px;line-height:1.7">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#c9a84c;margin:0">Termos de Uso e Política de Privacidade</h2>
+      <span onclick="hideTerms()" style="cursor:pointer;font-size:24px;color:rgba(244,239,230,0.4)">×</span>
+    </div>
+    <p style="color:rgba(244,239,230,0.4);font-size:11px;margin-bottom:24px">Última atualização: março de 2026 · Veltrilife — Assistente Financeiro Pessoal</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">1. Sobre o Veltrilife</h3>
+    <p>O Veltrilife é um assistente financeiro pessoal baseado em inteligência artificial que auxilia usuários na gestão de suas finanças pessoais, comparação de preços, rastreio de encomendas, consulta de informações financeiras e orientação sobre direitos do consumidor. O Veltrilife não é uma instituição financeira, não oferece crédito, não realiza transações financeiras em nome do usuário e não é regulado pelo Banco Central do Brasil como instituição de pagamento.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">2. Aceitação dos Termos</h3>
+    <p>Ao criar uma conta no Veltrilife, o usuário declara ter lido, compreendido e concordado integralmente com estes Termos de Uso e Política de Privacidade. Caso não concorde com qualquer disposição, o usuário não deve utilizar o serviço. O uso continuado após alterações nos termos implica aceitação das novas condições.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">3. Funcionalidades e Limitações</h3>
+    <p><strong style="color:rgba(244,239,230,0.9)">3.1 O Veltrilife oferece:</strong> comparação de preços em plataformas de e-commerce (Amazon, Mercado Livre); rastreio de encomendas; consulta de CNPJ, CEP e cotação de moedas; informações sobre feriados; orientação sobre direitos do consumidor; scripts de negociação e cancelamento; análise de contratos e faturas em PDF; alertas financeiros diários via WhatsApp; análise de padrões de gastos via Open Finance; integração com Gmail, Outlook, Google Calendar e Microsoft Calendar para usuários Premium.</p>
+    <p><strong style="color:rgba(244,239,230,0.9)">3.2 Limitações importantes:</strong> As respostas do Veltrilife são geradas por inteligência artificial e têm caráter estritamente informativo e educacional. Não constituem aconselhamento jurídico, financeiro, contábil ou de qualquer outra natureza profissional regulamentada. O usuário é o único responsável pelas decisões tomadas com base nas informações fornecidas pelo sistema.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">4. Open Finance e Dados Bancários</h3>
+    <p>Para usuários que optarem pela funcionalidade de análise de gastos via Open Finance: (a) o compartilhamento de dados bancários é voluntário e pode ser revogado a qualquer momento; (b) os dados são acessados exclusivamente para análise e geração de relatórios financeiros pessoais; (c) o Veltrilife não armazena credenciais bancárias do usuário; (d) o acesso ocorre por meio de parceiros homologados pelo Banco Central do Brasil; (e) o Veltrilife não realiza movimentações financeiras, transferências, pagamentos ou qualquer operação em nome do usuário sem sua expressa autorização em cada transação.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">5. Coleta e Uso de Dados — LGPD</h3>
+    <p>Em conformidade com a Lei nº 13.709/2018 (Lei Geral de Proteção de Dados — LGPD), o Veltrilife coleta e trata os seguintes dados pessoais:</p>
+    <p><strong style="color:rgba(244,239,230,0.9)">Dados coletados:</strong> nome completo; endereço de e-mail; número de telefone/WhatsApp; histórico de interações com o assistente; dados financeiros compartilhados voluntariamente pelo usuário (extratos, faturas, contratos); dados de transações quando conectado via Open Finance.</p>
+    <p><strong style="color:rgba(244,239,230,0.9)">Finalidades do tratamento:</strong> prestação dos serviços contratados; personalização das respostas da IA; envio de alertas e notificações via WhatsApp e e-mail; melhoria contínua do serviço; cumprimento de obrigações legais.</p>
+    <p><strong style="color:rgba(244,239,230,0.9)">Base legal:</strong> execução de contrato (Art. 7º, V da LGPD); legítimo interesse (Art. 7º, IX); consentimento do titular (Art. 7º, I) para dados sensíveis e Open Finance.</p>
+    <p><strong style="color:rgba(244,239,230,0.9)">Direitos do titular:</strong> o usuário pode a qualquer momento solicitar confirmação de tratamento, acesso, correção, anonimização, portabilidade, eliminação dos dados e revogação do consentimento, mediante solicitação para <strong style="color:#c9a84c"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="91e1e3f8e7f0f2f8f5f0f5f4d1e7f4fde5e3f8fdf8f7f4bff2fefcbff3e3">[email&#160;protected]</a></strong>.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">6. Compartilhamento de Dados</h3>
+    <p>O Veltrilife não vende dados pessoais a terceiros. Os dados podem ser compartilhados com: (a) provedores de infraestrutura tecnológica (Supabase, Anthropic, n8n, Z-API, Resend, Stripe) estritamente para prestação dos serviços; (b) parceiros de Open Finance homologados pelo Banco Central; (c) autoridades competentes mediante ordem judicial ou obrigação legal. Todos os parceiros estão sujeitos a obrigações contratuais de confidencialidade e proteção de dados.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">7. Segurança dos Dados</h3>
+    <p>O Veltrilife adota medidas técnicas e organizacionais adequadas para proteção dos dados pessoais, incluindo criptografia em trânsito (TLS/HTTPS), controle de acesso por autenticação, armazenamento seguro em nuvem com certificações de segurança. O usuário é responsável pela confidencialidade de suas credenciais de acesso.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">8. Planos e Pagamentos</h3>
+    <p>O Veltrilife oferece plano gratuito com funcionalidades limitadas e plano Premium mediante assinatura mensal. O pagamento é processado pela Stripe, plataforma de pagamentos segura e regulamentada. A assinatura é cobrada mensalmente e pode ser cancelada a qualquer momento, sem multa, mantendo o acesso até o fim do período já pago. Não há reembolso de períodos parciais já utilizados, exceto nos casos previstos no Código de Defesa do Consumidor.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">9. Direito de Arrependimento</h3>
+    <p>Nos termos do Art. 49 do Código de Defesa do Consumidor (Lei nº 8.078/1990), o usuário que contratar o plano Premium por meio eletrônico tem direito de arrependimento e cancelamento no prazo de 7 (sete) dias corridos a partir da contratação, com reembolso integral do valor pago, mediante solicitação para <strong style="color:#c9a84c"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="deadabaeb1acaabb9ea8bbb2aaacb7b2b7b8bbf0bdb1b3f0bcac">[email&#160;protected]</a></strong>.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">10. Comunicações via WhatsApp</h3>
+    <p>Ao fornecer seu número de WhatsApp e aceitar estes termos, o usuário consente expressamente em receber mensagens do Veltrilife pelo número cadastrado, incluindo: confirmação de cadastro; alertas financeiros diários (usuários Premium); notificações de pagamento; respostas às interações com o assistente. O usuário pode cancelar o recebimento de mensagens a qualquer momento solicitando pelo próprio WhatsApp ou pelo e-mail de suporte.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">11. Propriedade Intelectual</h3>
+    <p>Todos os direitos de propriedade intelectual relativos ao Veltrilife, incluindo marca, software, design, conteúdo e metodologia, são de titularidade exclusiva do Veltrilife. É vedada a reprodução, distribuição, engenharia reversa ou qualquer uso não autorizado sem prévia autorização escrita.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">12. Limitação de Responsabilidade</h3>
+    <p>O Veltrilife não se responsabiliza por: (a) decisões financeiras tomadas pelo usuário com base nas informações do assistente; (b) imprecisões nas respostas geradas por inteligência artificial; (c) indisponibilidade temporária do serviço por manutenção ou falhas técnicas; (d) danos indiretos, perda de lucros ou danos consequentes; (e) ações de terceiros, incluindo parceiros de Open Finance, e-commerce ou provedores de infraestrutura. A responsabilidade total do Veltrilife limita-se ao valor pago pelo usuário nos últimos 3 meses de assinatura.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">13. Uso Aceitável</h3>
+    <p>É vedado ao usuário: utilizar o serviço para fins ilegais; tentar burlar os sistemas de segurança; usar o assistente para obter informações que facilitem atividades criminosas; compartilhar suas credenciais de acesso com terceiros; realizar engenharia reversa ou scraping do sistema.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">14. Rescisão</h3>
+    <p>O Veltrilife reserva-se o direito de suspender ou encerrar contas que violem estes termos, sem prejuízo das medidas legais cabíveis. O usuário pode encerrar sua conta a qualquer momento solicitando a exclusão de seus dados pelo e-mail <strong style="color:#c9a84c"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3040425946515359545154557046555c4442595c5956551e535f5d1e5242">[email&#160;protected]</a></strong>.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">15. Alterações nos Termos</h3>
+    <p>O Veltrilife pode atualizar estes termos periodicamente. Alterações relevantes serão comunicadas por e-mail e/ou WhatsApp com antecedência mínima de 15 dias. O uso continuado após a vigência das alterações implica aceitação.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">16. Foro e Lei Aplicável</h3>
+    <p>Estes termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o foro da comarca de São Paulo/SP para dirimir quaisquer controvérsias, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
+
+    <h3 style="color:#c9a84c;font-size:14px;margin:20px 0 8px">17. Contato</h3>
+    <p>Para dúvidas, solicitações de dados ou suporte: <strong style="color:#c9a84c"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="691a1c19061b1d0c291f0c051d1b0005000f0c470a0604470b1b">[email&#160;protected]</a></strong> · <strong style="color:#c9a84c"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fd8d8f948b9c9e94999c9998bd8b9891898f9491949b98d39e9290d39f8f">[email&#160;protected]</a></strong></p>
+
+    <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);text-align:center">
+      <button onclick="acceptTerms()" style="background:linear-gradient(135deg,#e8c97a,#c9a84c);color:#080808;border:none;padding:14px 32px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer">Li e aceito os Termos</button>
+      <div onclick="hideTerms()" style="margin-top:12px;font-size:12px;color:rgba(244,239,230,0.3);cursor:pointer">Fechar</div>
+    </div>
+  </div>
+</div>
+
+<div id="upgrade-modal" style="display:none;position:fixed;inset:0;z-index:80">
+  <div class="m-bg" onclick="hideUpgrade()">
+    <div class="m-sheet" onclick="event.stopPropagation()">
+      <div class="m-handle"></div>
+      <div class="m-title">Premium — Guardião Completo</div>
+      <div class="m-body">
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Análise de gastos via Open Banking <span style="font-size:10px;opacity:0.5">(em breve)</span></div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Negociação de dívidas com IA personalizada</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Alertas proativos diários às 7h</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Processar boletos + gerar PIX automaticamente</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Gmail + Microsoft Outlook integrados</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Google Calendar + Microsoft Calendar</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Comparação de planos em tempo real</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Detectar assinaturas e cobranças indevidas</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Análise de contratos e faturas PDF</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Reclamações formais (Procon, Consumidor.gov, ANATEL)</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Amazon + Mercado Livre + histórico de preços</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Cancelar assinaturas automaticamente</div>
+        <div class="m-feat"><span class="m-feat-ico">✦</span>Chat ilimitado com IA</div>
+        <div class="m-price">
+          <div class="m-price-n">R$ 29,90</div>
+          <div class="m-price-p">por mês · cancele quando quiser</div>
+        </div>
+        <button class="m-cta" id="btn-assinar" onclick="assinarPremium()">Assinar Premium</button>
+        <div class="m-close" onclick="hideUpgrade()">Continuar no gratuito</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://js.stripe.com/v3/"></script>
+<script>
+const WEBHOOK='https://veltrilife.app.n8n.cloud/webhook/4a122437-40df-443d-9fa9-7f5fa414c577';
+const WEBHOOK_CHAT='https://veltrilife.app.n8n.cloud/webhook/veltrilife-chat';
+const CADASTRO='https://veltrilife.app.n8n.cloud/webhook/veltrilife-cadastro';
+const SUPABASE_URL='https://tphdqfhciynnmfpxdkrf.supabase.co';
+const STRIPE_KEY='pk_test_51T7oRRB823Uv7zIKKz0LlJhywdaDLoEo5WDJWeUZdFzYJZlRRjUjLEsprjbJIfgW8KzVaA4OTREoF7P5Y4A5bBCR00DdnIexIf';
+const STRIPE_PRICE='price_1T7oV1B823Uv7zIKGvbyq628';
+const SUPABASE_KEY='sb_publishable_M8i-BXVkIvPwFdA-SSuR6Q_zmdw1S5L';
+let isPremium=false, userName='', currentTab='signup';
+let historico=[];
+
+// Funcionalidades premium — bloqueadas no gratuito
+const PREMIUM=[
+  'negociar_divida','comparar_plano','analise_gastos','alertas',
+  'processar_boleto','ler_emails','agendar_calendario','analise_contrato',
+  'analise_fatura','reclamacao_formal',
+  'monitorar_preco','historico_precos','cancelar_assinatura_auto','texto_reclameaqui_premium'
+];
+
+window.addEventListener('load',()=>{setTimeout(()=>{const params=new URLSearchParams(window.location.search);if(params.get('premium')==='true'){isPremium=true;show('chat-screen','splash');document.getElementById('plan-bar').innerHTML='<span class="plan-bar-t">2726 Plano Premium</span><span style="font-size:12px;color:var(--gold)">2713 Ativo</span>';history.replaceState({},'',window.location.pathname);}else{show('landing','splash');}},2000);});
+
+function show(to,from){if(from)document.getElementById(from).classList.add('hidden');document.getElementById(to).classList.remove('hidden')}
+function goToLanding(){['auth','chat-screen'].forEach(id=>document.getElementById(id).classList.add('hidden'));show('landing')}
+function goToAuth(tab='signup'){show('auth','landing');switchTab(tab)}
+function goToChat(nome){
+  userName=nome||'';
+  historico=[]; // limpa histórico ao entrar no chat
+  if(userName) document.getElementById('user-name').textContent=userName+'!';
+  if(isPremium){
+    document.getElementById('plan-bar').innerHTML='<span class="plan-bar-t">✦ Plano Premium</span><span style="font-size:12px;color:var(--gold)">✓ Ativo</span>';
+  }
+  show('chat-screen','auth');
+}
+
+function switchTab(t){
+  currentTab=t;
+  document.getElementById('tab-signup').classList.toggle('active',t==='signup');
+  document.getElementById('tab-login').classList.toggle('active',t==='login');
+  document.getElementById('name-field').style.display=t==='signup'?'block':'none';
+  document.getElementById('phone-field').style.display=t==='signup'?'block':'none';
+  document.getElementById('terms-field').style.display=t==='signup'?'block':'none';
+  document.getElementById('auth-btn').textContent=t==='signup'?'Criar conta grátis':'Entrar';
+  document.getElementById('auth-error').style.display='none';
+  document.getElementById('auth-success').style.display='none';
+}
+
+async function handleAuth(){
+  const nome=document.getElementById('auth-name').value.trim();
+  const telefone=document.getElementById('auth-phone').value.trim().replace(/\D/g,'');
+  const email=document.getElementById('auth-email').value.trim();
+  const senha=document.getElementById('auth-pass').value;
+  const btn=document.getElementById('auth-btn');
+  const errEl=document.getElementById('auth-error');
+  const okEl=document.getElementById('auth-success');
+
+  if(!email){errEl.textContent='Digite seu email.';errEl.style.display='block';return}
+  if(!senha){errEl.textContent='Digite sua senha.';errEl.style.display='block';return}
+  if(currentTab==='signup'&&!nome){errEl.textContent='Digite seu nome.';errEl.style.display='block';return}
+  if(currentTab==='signup'&&!telefone){errEl.textContent='Digite seu WhatsApp.';errEl.style.display='block';return}
+  if(currentTab==='signup'&&telefone.length<10){errEl.textContent='WhatsApp inválido.';errEl.style.display='block';return}
+  if(currentTab==='signup'&&senha.length<6){errEl.textContent='Senha deve ter ao menos 6 caracteres.';errEl.style.display='block';return}
+  if(currentTab==='signup'&&!document.getElementById('terms-check').checked){errEl.textContent='Você precisa aceitar os Termos de Uso para continuar.';errEl.style.display='block';return}
+
+  btn.disabled=true;
+  btn.textContent=currentTab==='signup'?'Criando conta...':'Entrando...';
+  errEl.style.display='none';okEl.style.display='none';
+
+  try{
+    if(currentTab==='signup'){
+      // 1. Criar usuário no Supabase Auth
+      const authRes=await fetch(`${SUPABASE_URL}/auth/v1/signup`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+        body:JSON.stringify({email,password:senha})
+      });
+      const authData=await authRes.json();
+      if(authData.error){errEl.textContent=authData.error.message||'Erro ao criar conta.';errEl.style.display='block';btn.disabled=false;btn.textContent='Criar conta grátis';return}
+      // 2. Salvar no banco e enviar email via n8n
+      await fetch(CADASTRO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,email,telefone})});
+      okEl.textContent='✓ Conta criada! Verifique seu email.';okEl.style.display='block';
+      setTimeout(()=>goToChat(nome),1200);
+    } else {
+      // Login real com Supabase Auth
+      const authRes=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+        body:JSON.stringify({email,password:senha})
+      });
+      const authData=await authRes.json();
+      if(authData.error){errEl.textContent='Email ou senha incorretos.';errEl.style.display='block';btn.disabled=false;btn.textContent='Entrar';return}
+      // Buscar nome do usuário na tabela usuarios
+      let nomeUsuario=email.split('@')[0];
+      try{
+        const userRes=await fetch(`${SUPABASE_URL}/rest/v1/usuarios?email=eq.${encodeURIComponent(email)}&select=nome`,{
+          headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+        });
+        const userData=await userRes.json();
+        if(userData[0]?.nome) nomeUsuario=userData[0].nome;
+      }catch{}
+      goToChat(nomeUsuario);
+    }
+  }catch{
+    errEl.textContent='Erro de conexão. Tente novamente.';errEl.style.display='block';
+    btn.disabled=false;btn.textContent=currentTab==='signup'?'Criar conta grátis':'Entrar';
+  }
+}
+
+function showTerms(){document.getElementById('terms-modal').style.display='block'}
+function hideTerms(){document.getElementById('terms-modal').style.display='none'}
+function acceptTerms(){document.getElementById('terms-check').checked=true;hideTerms()}
+function showUpgrade(){document.getElementById("upgrade-modal").style.display="block"}
+function hideUpgrade(){document.getElementById("upgrade-modal").style.display="none"}
+async function assinarPremium(){
+  const btn=document.getElementById("btn-assinar");
+  btn.textContent="Aguarde...";btn.disabled=true;
+  try{
+    const stripe=Stripe(STRIPE_KEY);
+    await stripe.redirectToCheckout({
+      lineItems:[{price:STRIPE_PRICE,quantity:1}],
+      mode:"subscription",
+      successUrl:window.location.origin+"?premium=true",
+      cancelUrl:window.location.href
+    });
+  }catch(e){
+    btn.textContent="Assinar Premium";btn.disabled=false;
+    alert("Erro ao abrir pagamento. Tente novamente.");
+  }
+}
+function sendQ(t){document.getElementById('msg-input').value=t;sendMsg()}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,96)+'px'}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}}
+function removeWelcome(){document.querySelector('.c-welcome')?.remove()}
+
+async function sendMsg(){
+  const inp=document.getElementById('msg-input');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';inp.style.height='auto';
+  document.getElementById('send-btn').disabled=true;
+  removeWelcome();addMsg('user',text);
+  const typing=addTyping();scrollBot();
+
+  // Adiciona mensagem do usuário ao histórico
+  historico.push({role:'user',content:text});
+  // Mantém histórico com no máximo 20 mensagens (10 pares)
+  if(historico.length>20)historico=historico.slice(-20);
+
+  try{
+    // 1. Chama o Chat IA para resposta conversacional
+    const chatRes=await fetch(WEBHOOK_CHAT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        mensagem_usuario:text,
+        historico:historico.slice(0,-1), // envia histórico sem a mensagem atual
+        plano:isPremium?'premium':'gratuito',
+        nome:userName||'usuário'
+      })
+    });
+    const chatData=await chatRes.json();
+    typing.remove();
+
+    const resposta=chatData.resposta||'Processado com sucesso!';
+    const acao=chatData.acao;
+    const temAcao=chatData.tem_acao;
+
+    // Adiciona resposta ao histórico
+    historico.push({role:'assistant',content:resposta});
+
+    // Exibe resposta conversacional
+    addMsg('bot',resposta);
+
+    // 2. Se Claude identificou uma ação E o usuário tem permissão, executa
+    if(temAcao&&acao?.acao_id){
+      const intent=acao.acao_id;
+
+      if(intent==='analise_gastos'){
+        const msgs=document.getElementById('c-msgs');
+        const w=document.createElement('div');
+        w.className='msg bot';
+        w.innerHTML=`<div style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(154,114,48,0.05));border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:16px">
+          <div style="font-size:14px;color:#c9a84c;margin-bottom:8px">📊 Análise de Gastos via Open Banking</div>
+          <div style="font-size:13px;color:rgba(244,239,230,0.7);line-height:1.6">Esta funcionalidade está em desenvolvimento e será lançada em breve!<br><br>
+          Quando disponível, você poderá conectar seu banco e ver:<br>
+          ✦ Para onde vai cada centavo<br>
+          ✦ Assinaturas esquecidas<br>
+          ✦ Padrões de gastos por categoria<br>
+          ✦ Sugestões personalizadas de economia</div>
+          <div style="font-size:11px;color:rgba(244,239,230,0.3);margin-top:12px">Funcionalidade Premium — disponível em breve ✦</div>
+        </div>`;
+        msgs.appendChild(w);scrollBot();
+      } else if(!isPremium&&PREMIUM.includes(intent)){
+        addLocked();
+      } else {
+        // Executa a ação no webhook principal
+        const actionTyping=addTyping();scrollBot();
+        try{
+          const payload={...acao,mensagem_usuario:text,user_id:'user_default'};
+          const res=await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+          const data=await res.json();
+          actionTyping.remove();
+          handleResponse(data,intent);
+        }catch{actionTyping.remove();}
+      }
+    }
+  }catch(e){
+    typing.remove();
+    addMsg('bot','Não consegui conectar. Verifique sua conexão e tente novamente.');
+  }
+  document.getElementById('send-btn').disabled=false;scrollBot();
+}
+
+function detectIntent(t){
+  t=t.toLowerCase();
+  if(t.match(/dívida|divida|serasa|negoci|débito|debito/))return'negociar_divida';
+  if(t.match(/plano|operadora|celular.*car|car.*celular|internet.*car|claro|vivo|tim\b|oi\b/))return'comparar_plano';
+  if(t.match(/boleto|código de barras/))return'processar_boleto';
+  if(t.match(/amazon/))return'buscar_preco_amazon';
+  if(t.match(/preço|preco|comprar|produto|busq|amazon/))return'buscar_preco_amazon';
+  if(t.match(/gast|despesa|gastei|extrato/))return'analise_gastos';
+  if(t.match(/alerta|notificaç/))return'alertas';
+  if(t.match(/rastrear|encomenda|correio|entrega/))return'rastrear_correios';
+  if(t.match(/cancelar|assinatura/))return'cancelar_assinatura_auto';
+  if(t.match(/cobrança|cobranca|indevida|errada/))return'script_cobranca_indevida';
+  if(t.match(/cnpj/))return'consultar_cnpj';
+  if(t.match(/cep|endereço/))return'consultar_cep';
+  if(t.match(/dólar|dollar|euro|câmbio|cotação|moeda/))return'cotacao_moeda';
+  if(t.match(/feriado/))return'consultar_feriados';
+  if(t.match(/reclameaqui|reclamar/))return'buscar_reclameaqui';
+  if(t.match(/direito/))return'orientacao_direitos';
+  if(t.match(/prazo/))return'calcular_prazo_legal';
+  if(t.match(/portabilidade/))return'roteiro_portabilidade';
+  if(t.match(/cancelamento|reembolso|defeito|multa/))return'gerar_script_pronto';
+  return'resumir_situacao';
+}
+
+function buildPayload(intent,text){
+  const b={acao_id:intent,mensagem_usuario:text,user_id:'user_default'};
+  if(intent==='negociar_divida'){
+    const v=text.match(/R?\$?\s?(\d[\d.,]*)/)?.[1]?.replace('.','').replace(',','.')||'1000';
+    const c=text.match(/(?:dívida|divida|serasa)(?:\s+(?:no|na|com|do|da))?\s+([A-Za-záéíóúãõâêô\s]+?)(?:\s+de|\s+no|$)/i)?.[1]?.trim()||'Credor';
+    return{...b,credor:c,valor_original:parseFloat(v),tempo_atraso_meses:12};
+  }
+  if(intent==='comparar_plano'){const tipo=text.match(/internet|banda/i)?'internet':text.match(/saúde|saude/i)?'saude':'celular';return{...b,tipo,operadora_atual:'',valor_atual:0,franquia_atual:''}}
+  if(intent.includes('buscar_preco')){const p=text.replace(/busque|busca|preço|preco|comprar|quero|encontre|melhor|de|do|da|o|a|na|amazon|mercado livre|ml/gi,'').trim();return{...b,produto:p||text}}
+  if(intent==='rastrear_correios')return{...b,codigo_rastreio:text.match(/[A-Z]{2}\d{9}[A-Z]{2}/)?.[0]||''};
+  if(intent==='consultar_cnpj')return{...b,cnpj:text.match(/\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}/)?.[0]||''};
+  if(intent==='consultar_cep')return{...b,cep:text.match(/\d{5}-?\d{3}/)?.[0]||''};
+  if(intent==='cotacao_moeda'){const m=text.match(/dólar|dollar|usd/i)?'USD':text.match(/euro/i)?'EUR':'USD';return{...b,moeda_origem:m,moeda_destino:'BRL'}}
+  return b;
+}
+
+function handleResponse(data,intent){
+  addMsg('bot',data.mensagem||data.message||'Processado com sucesso!');
+  const r=data.resultado||{};
+  if(r.negociacao_divida){const n=r.negociacao_divida;addCard('Negociação de Dívida',[{l:'Credor',v:n.credor},{l:'Valor original',v:n.valor_original},{l:'Desconto estimado',v:n.desconto_estimado,c:'gold'},{l:'Valor a pagar',v:n.valor_a_pagar,c:'green'},{l:'Economia',v:n.economia_estimada,c:'green'}])}
+  if(r.comparacao_plano){const c=r.comparacao_plano;addCard('Comparação de Planos',[{l:'Plano atual',v:`${c.plano_atual?.operadora||''} ${c.plano_atual?.valor||''}`},{l:'Melhor oferta',v:`${c.melhor_oferta?.operadora||''} ${c.melhor_oferta?.valor||''}`,c:'gold'},{l:'Economia mensal',v:c.economia_mensal,c:'green'},{l:'Economia anual',v:c.economia_anual,c:'green'}])}
+  if(r.boleto_processado){const b=r.boleto_processado;addCard('Boleto',[{l:'Valor',v:b.valor_original},{l:'Vencimento',v:b.data_vencimento},{l:'Status',v:b.vencido?'⚠️ Vencido':'✅ Em dia',c:b.vencido?'red':'green'}])}
+  if(r.cotacao_moeda){const c=r.cotacao_moeda;addCard('Cotação',[{l:'Par',v:c.par},{l:'Valor',v:c.valor_formatado,c:'gold'},{l:'Data',v:c.data}])}
+  if(r.consulta_cep){const c=r.consulta_cep;addCard('CEP',[{l:'Logradouro',v:c.logradouro},{l:'Bairro',v:c.bairro},{l:'Cidade',v:`${c.localidade}/${c.uf}`}])}
+  if(r.rastreio){const rr=r.rastreio;addCard('Rastreamento',[{l:'Código',v:rr.codigo},{l:'Status',v:rr.status,c:'gold'},{l:'Atualização',v:rr.ultima_atualizacao}])}
+  if(r.consulta_cnpj){const c=r.consulta_cnpj;addCard('CNPJ',[{l:'Razão Social',v:c.razao_social},{l:'Situação',v:c.situacao,c:'gold'},{l:'Município',v:c.municipio}])}
+}
+
+function renderMd(t){t=t.replace(/\[ACAO:\{.*?\}\]/gs,'').trim();t=t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');t=t.replace(/\*(.*?)\*/g,'<em>$1</em>');t=t.replace(/\n/g,'<br>');return t}
+function addMsg(role,text){const msgs=document.getElementById('c-msgs');const d=document.createElement('div');d.className=`msg ${role}`;const display=role==='bot'?renderMd(text):text;d.innerHTML=`<div class="bubble">${display}</div>`;msgs.appendChild(d);scrollBot()}
+function addCard(title,rows){const msgs=document.getElementById('c-msgs');const w=document.createElement('div');w.className='msg bot';w.innerHTML=`<div class="r-card"><div class="r-title">${title}</div>${rows.map(r=>`<div class="r-row"><span class="r-l">${r.l}</span><span class="r-v ${r.c||''}">${r.v||'—'}</span></div>`).join('')}</div>`;msgs.appendChild(w);scrollBot()}
+function addLocked(){const msgs=document.getElementById('c-msgs');const w=document.createEleewport-fit=cover"/>
   <meta name="theme-color" content="#080808"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
