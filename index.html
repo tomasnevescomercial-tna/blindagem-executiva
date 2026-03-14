@@ -673,7 +673,8 @@ async function sendMsg(){
         nome:userName||'usuário'
       })
     });
-    const chatData=await chatRes.json();
+    const chatDataRaw=await chatRes.json();
+    const chatData=Array.isArray(chatDataRaw)?chatDataRaw[0]:chatDataRaw;
     typing.remove();
 
     const resposta=chatData.resposta||'Processado com sucesso!';
