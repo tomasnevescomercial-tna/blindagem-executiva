@@ -776,9 +776,30 @@ function handleResponse(data,intent){
   if(r.consulta_cep){const c=r.consulta_cep;addCard('CEP',[{l:'Logradouro',v:c.logradouro},{l:'Bairro',v:c.bairro},{l:'Cidade',v:`${c.localidade}/${c.uf}`}])}
   if(r.rastreio){const rr=r.rastreio;addCard('Rastreamento',[{l:'Código',v:rr.codigo},{l:'Status',v:rr.status,c:'gold'},{l:'Atualização',v:rr.ultima_atualizacao}])}
   if(r.consulta_cnpj){const c=r.consulta_cnpj;addCard('CNPJ',[{l:'Razão Social',v:c.razao_social},{l:'Situação',v:c.situacao,c:'gold'},{l:'Município',v:c.municipio}])}
+  if(r.busca_amazon){
+    const msgs=document.getElementById('c-msgs');
+    const w=document.createElement('div');w.className='msg bot';
+    const prods=r.busca_amazon.produtos||[];
+    const rows=prods.map(p=>`<div class="r-row"><span class="r-l" style="max-width:60%;white-space:normal;line-height:1.4">${p.titulo?.substring(0,60)}...</span><span class="r-v gold">${p.preco||'—'}</span></div>`).join('');
+    w.innerHTML=`<div class="r-card"><div class="r-title">🛍️ Amazon — ${r.busca_amazon.keyword||''}</div>${rows}</div>`;
+    msgs.appendChild(w);scrollBot();
+  }
+  if(r.busca_ml){
+    const msgs=document.getElementById('c-msgs');
+    const w=document.createElement('div');w.className='msg bot';
+    const prods=r.busca_ml.produtos||[];
+    const rows=prods.map(p=>`<div class="r-row"><span class="r-l" style="max-width:60%;white-space:normal;line-height:1.4">${(p.titulo||'').substring(0,60)}...</span><span class="r-v gold">${p.preco||p.preco_formatado||'—'}</span></div>`).join('');
+    w.innerHTML=`<div class="r-card"><div class="r-title">🛍️ Mercado Livre — ${r.busca_ml.keyword||''}</div>${rows}</div>`;
+    msgs.appendChild(w);scrollBot();
+  }
 }
 
 function renderMd(t){t=t.replace(/\[ACAO:\{.*?\}\]/gs,'').trim();t=t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');t=t.replace(/\*(.*?)\*/g,'<em>$1</em>');t=t.replace(/\n/g,'<br>');return t}
 function addMsg(role,text){const msgs=document.getElementById('c-msgs');const d=document.createElement('div');d.className=`msg ${role}`;const display=role==='bot'?renderMd(text):text;d.innerHTML=`<div class="bubble">${display}</div>`;msgs.appendChild(d);scrollBot()}
 function addCard(title,rows){const msgs=document.getElementById('c-msgs');const w=document.createElement('div');w.className='msg bot';w.innerHTML=`<div class="r-card"><div class="r-title">${title}</div>${rows.map(r=>`<div class="r-row"><span class="r-l">${r.l}</span><span class="r-v ${r.c||''}">${r.v||'—'}</span></div>`).join('')}</div>`;msgs.appendChild(w);scrollBot()}
-function addLocked(){const msgs=document.getElementById('c-msgs');const w=document.createEle
+function addLocked(){const msgs=document.getElementById('c-msgs');const w=document.createElement('div');w.className='msg bot';w.innerHTML=`<div class="locked"><div class="locked-ico">🔒</div><div><div class="locked-t">Funcionalidade Premium</div><div class="locked-d">Desbloqueie por R$ 29,90/mês.</div></div><button class="locked-btn" onclick="showUpgrade()">Ver planos</button></div>`;msgs.appendChild(w);scrollBot()}
+function addTyping(){const msgs=document.getElementById('c-msgs');const d=document.createElement('div');d.className='msg bot';d.innerHTML=`<div class="typing"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>`;msgs.appendChild(d);scrollBot();return d}
+function scrollBot(){const msgs=document.getElementById('c-msgs');setTimeout(()=>msgs.scrollTop=msgs.scrollHeight,50)}
+</script>
+</body>
+</html>
